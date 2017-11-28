@@ -37,18 +37,25 @@
 #define MAX_SAND 150000
 #define MAX_PRESET 5
 
+#define FIX_BORDER 1
+
 #define GRAVITY 0.25
 
+#define FLUID_GRID 12
 
 typedef struct sand {
 	double x = 0.0;
 	double y = 0.0;
+	double o_x = 0.0;
+	double o_y = 0.0;
 	double massa = 1.0;
+	double acceleration = 0.0;
 	float h;
 	float s;
 	float v;
 	int shineing_rate = 100;
 	int color = 0xFFFFFF;
+	bool is_fix = false;
 }sand_t;
 
 class GameMain {

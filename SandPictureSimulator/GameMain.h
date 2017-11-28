@@ -16,13 +16,6 @@
 #include "CommonLib.h"
 #include "DxLib.h"
 
-// セルサイズ
-#define CELL_SIZE 32
-#define CELL_X_NUM 16
-#define CELL_Y_NUM 16
-#define DEBUG
-
-#define LISTEN_PORT 8500
 
 // ============================================================
 // 画面解像度定義
@@ -33,15 +26,30 @@
 #define SCREEN_HEIGHT	::GetSystemMetrics(SM_CYSCREEN)
 #else __DOT_BY_DOT__
 // 解像度定義
-#define SCREEN_WIDTH	640
-#define SCREEN_HEIGHT	640
+#define SCREEN_WIDTH	1024
+#define SCREEN_HEIGHT	576
 #endif __DOT_BY_DOT__
 
-#define WINDOW_TITLE "3D Sound"
+#define WINDOW_TITLE "SandPictureSimulator"
 
 #define MAX_STRING 255
 
+#define MAX_SAND 150000
+#define MAX_PRESET 5
 
+#define GRAVITY 0.25
+
+
+typedef struct sand {
+	double x = 0.0;
+	double y = 0.0;
+	double massa = 1.0;
+	float h;
+	float s;
+	float v;
+	int shineing_rate = 100;
+	int color = 0xFFFFFF;
+}sand_t;
 
 class GameMain {
 
@@ -53,6 +61,8 @@ public:
 private:
 	void Load();
 	int Draw();
+	sand_t sand[MAX_SAND];
+	sand_t preset[MAX_PRESET];
 
 };
 

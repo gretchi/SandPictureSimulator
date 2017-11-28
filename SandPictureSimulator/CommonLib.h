@@ -20,5 +20,7 @@ void GetData(char input[MAX_DATA_LENGTH], int *seed_id, int *entry_id, int *gene
 // ステータス表示
 void ShowStatusWithDirectX(int color, char *message);
 
-#endif __COMMON_LIB_H__
+// HSV取得
+int GetColorHSV(float H, float S, float V);
 
+#endif __COMMON_LIB_H__

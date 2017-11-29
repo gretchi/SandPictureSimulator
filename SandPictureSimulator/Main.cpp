@@ -17,7 +17,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//タイトル
 	SetMainWindowText(WINDOW_TITLE);
 	//ログ出力しない。
+#ifdef _DEBUG
 	SetOutApplicationLogValidFlag(FALSE);
+#else
+	SetOutApplicationLogValidFlag(TRUE);
+#endif // _DEBUG
 	//アクティブでなくても動くか
 	SetAlwaysRunFlag(TRUE);
 

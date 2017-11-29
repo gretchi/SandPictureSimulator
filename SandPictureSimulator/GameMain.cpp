@@ -186,7 +186,7 @@ int GameMain::Draw() {
 		DrawPixel(int(this->sand[i].x), int(this->sand[i].y), this->sand[i].color);
 	}
 
-#ifdef _DEBUG
+// #ifdef _DEBUG
 	// ヒートマップ描画
 	if(this->change_heat_map_key->GetResult()) {
 		for (int i = 0; i < WIDTH_GRID_NUM; i++) {
@@ -200,7 +200,7 @@ int GameMain::Draw() {
 			}
 		}
 	}
-#endif // _DEBUG
+// #endif // _DEBUG
 
 	// ================================================================
 	// アクティブ砂インクリメント

@@ -35,7 +35,7 @@
 
 #define MAX_STRING 255
 
-#define MAX_SAND 150000
+#define MAX_SAND 200000
 #define MAX_PRESET 5
 
 #define FIX_BORDER 1

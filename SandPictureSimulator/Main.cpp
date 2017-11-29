@@ -8,6 +8,14 @@ int FrameCount = 0;
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	LPSTR lpCmdLine, int nCmdShow)
 {
+#ifdef _DEBUG
+	//ログ出力する
+	SetOutApplicationLogValidFlag(TRUE);
+#else
+	//ログ出力しない
+	SetOutApplicationLogValidFlag(FALSE);
+#endif // _DEBUG
+
 	// 画面モードのセット
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
 	//ウィンドウモードで起動
@@ -16,12 +24,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	SetMouseDispFlag(TRUE);
 	//タイトル
 	SetMainWindowText(WINDOW_TITLE);
-	//ログ出力しない。
-#ifdef _DEBUG
-	SetOutApplicationLogValidFlag(FALSE);
-#else
-	SetOutApplicationLogValidFlag(TRUE);
-#endif // _DEBUG
 	//アクティブでなくても動くか
 	SetAlwaysRunFlag(TRUE);
 

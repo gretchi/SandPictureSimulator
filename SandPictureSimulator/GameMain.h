@@ -30,6 +30,7 @@
 #define SCREEN_HEIGHT	576
 #endif __DOT_BY_DOT__
 
+
 #define WINDOW_TITLE "SandPictureSimulator"
 
 #define MAX_STRING 255

@@ -15,6 +15,9 @@ GameMain::GameMain() {
 	// ================================================================
 	// ヒートマップ切り替え
 	this->change_heat_map_key = new ToggleKey(KEY_INPUT_M);
+	
+	// リセット
+	this->reset_key = new ToggleKey(KEY_INPUT_N);
 
 
 }
@@ -47,9 +50,9 @@ void GameMain::Load() {
 	// [4] 金砂
 
 	double init_hue = double(GetRand(36000)) / 100.0;
-	double preset_s[MAX_PRESET] = { 0.0, 0.0, 0.9, 0.0, 0.2};
-	double preset_v[MAX_PRESET] = { 0.8, 0.2, 1.0, 0.8, 0.2};
-	int preset_s_rate[MAX_PRESET] = { 1000, 50, 200, 300, 25 };
+	double preset_s[MAX_PRESET] = { 0.0, 0.0, 0.9, 0.0, 0.2, 0.0};
+	double preset_v[MAX_PRESET] = { 0.8, 0.2, 1.0, 0.8, 0.2, 0.2};
+	int preset_s_rate[MAX_PRESET] = { 1000, 50, 200, 300, 25, 75};
 
 	for (int i = 0; i < MAX_PRESET; i++) {
 		this->preset[i].massa = (double(GetRand(280)) + 30.0) / 100.0;
@@ -188,7 +191,7 @@ int GameMain::Draw() {
 
 // #ifdef _DEBUG
 	// ヒートマップ描画
-	if(this->change_heat_map_key->GetResult()) {
+	if(this->change_heat_map_key->GetToggle()) {
 		for (int i = 0; i < WIDTH_GRID_NUM; i++) {
 			for (int j = 0; j < HEIGHT_GRID_NUM; j++) {
 				int hm_b_mode_alpha = 16 + fluid_moov_n[i][j] * 1.75f;
@@ -217,35 +220,61 @@ int GameMain::Draw() {
 int GameMain::Main() {
 	char title_buf[MAX_STRING];
 	char build_state[MAX_STRING];
+	bool reset_seq_flg = false;
+	int reset_time = 0;
 
-#ifdef _DEBUG
-	sprintf_s(build_state, MAX_STRING, "%s", "Debug Build");
-#endif // _DEBUG
+	#ifdef _DEBUG
+		// Debug
+		sprintf_s(build_state, MAX_STRING, "%s", "Debug Build");
+	#else
+		// Release
+		sprintf_s(build_state, MAX_STRING, "%s", "");
+	#endif // _DEBUG
 
-	// ロード
-	this->Load();
+	while (true) {
+		// ロード
+		this->Load();
 
-	while(true) {
-		sprintf_s(title_buf, MAX_STRING, "%s [%.02fFPS] %s", WINDOW_TITLE, GetFPS(), build_state);
-		SetMainWindowText(title_buf);
+		while (true) {
+			sprintf_s(title_buf, MAX_STRING, "%s [%.02fFPS] %s", WINDOW_TITLE, GetFPS(), build_state);
+			SetMainWindowText(title_buf);
 
-		// キーマップリフレッシュ
-		this->change_heat_map_key->Refresh();
+			// キーマップリフレッシュ
+			this->change_heat_map_key->Refresh();
+			this->reset_key->Refresh();
 
-		// 画面初期化
-		ClearDrawScreen();
+			// リセットボタン
+			if (reset_seq_flg == false && this->reset_key->GetFrameOnce()) {
+				// リセットシーケンス突入
+				reset_seq_flg = true;
+				reset_time = 0;
+			}
 
-		// 描画
-		this->Draw();
+			// 画面初期化
+			ClearDrawScreen();
 
-		// 裏画面描画
-		ScreenFlip();
+			// 描画
+			this->Draw();
 
-		// Windowmメッセージング処理
-		if (ProcessMessage() == -1) {
-			return 0;
+			// リセットシーケンス処理
+			if (reset_seq_flg) {
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, reset_time);
+				DrawBox(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, 0x000000, true);
+				reset_time += 4;
+				if (reset_time > 255) {
+					reset_seq_flg = false;
+					break;
+				}
+			}
+
+			// 裏画面描画
+			ScreenFlip();
+
+			// Windowmメッセージング処理
+			if (ProcessMessage() == -1) {
+				return 0;
+			}
 		}
-
 	}
 	return 0;
 }

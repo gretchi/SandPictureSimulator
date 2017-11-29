@@ -118,6 +118,7 @@ ToggleKey::ToggleKey(int key_code) {
 	this->mapped_key = key_code;
 	this->last_state = 0;
 	this->result = 0;
+	this->once = 0;
 }
 
 ToggleKey::~ToggleKey() {
@@ -126,20 +127,25 @@ ToggleKey::~ToggleKey() {
 
 void ToggleKey::Refresh() {
 	int now = CheckHitKey(this->mapped_key);
-	
+	this->once = 0;
+
 	if (now) {
 		if (!this->last_state) {
 			this->result += 1;
+			this->once = 1;
 		}
 	}
 
 	this->last_state = now;
 }
 
-int ToggleKey::GetResult() {
+int ToggleKey::GetToggle() {
 	return this->result % 2;
 }
 
+int ToggleKey::GetFrameOnce() {
+	return this->once;
+}
 
 
 

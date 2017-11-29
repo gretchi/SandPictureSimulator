@@ -29,11 +29,13 @@ public:
 	ToggleKey(int key_code);
 	~ToggleKey();
 	void Refresh();
-	int GetResult();
+	int GetToggle();
+	int GetFrameOnce();
 private:
 	int mapped_key;
 	int last_state;
 	int result;
+	int once;
 };
 
 #endif __COMMON_LIB_H__

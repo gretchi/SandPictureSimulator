@@ -36,7 +36,7 @@
 #define MAX_STRING 255
 
 #define MAX_SAND 200000
-#define MAX_PRESET 5
+#define MAX_PRESET 6
 
 #define FIX_BORDER 1
 
@@ -80,6 +80,7 @@ private:
 	sand_t sand[MAX_SAND];
 	sand_t preset[MAX_PRESET];
 	ToggleKey *change_heat_map_key;
+	ToggleKey *reset_key;
 };
 
 

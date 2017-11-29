@@ -109,6 +109,44 @@ int GetColorHSV(float H, float S, float V)
 	return GetColor(ir, ig, ib);
 }
 
+
+
+// ================================================================
+// Class: トグルキー
+// ================================================================
+ToggleKey::ToggleKey(int key_code) {
+	this->mapped_key = key_code;
+	this->last_state = 0;
+	this->result = 0;
+}
+
+ToggleKey::~ToggleKey() {
+
+}
+
+void ToggleKey::Refresh() {
+	int now = CheckHitKey(this->mapped_key);
+	
+	if (now) {
+		if (!this->last_state) {
+			this->result += 1;
+		}
+	}
+
+	this->last_state = now;
+}
+
+int ToggleKey::GetResult() {
+	return this->result % 2;
+}
+
+
+
+
+
+// ================================================================
+// Class: 標準出力
+// ================================================================
 /*
 class StdPrint {
 void init() {
@@ -124,3 +162,5 @@ printf("開始\n");
 }
 }
 */
+
+

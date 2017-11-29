@@ -43,6 +43,11 @@
 
 #define FLUID_GRID 12
 
+#define WIDTH_GRID_NUM SCREEN_WIDTH / FLUID_GRID + 1
+#define HEIGHT_GRID_NUM SCREEN_HEIGHT / FLUID_GRID + 1
+
+#define ADD_ACTIVE_SAND 500
+
 typedef struct sand {
 	double x = 0.0;
 	double y = 0.0;
@@ -50,6 +55,9 @@ typedef struct sand {
 	double o_y = 0.0;
 	double massa = 1.0;
 	double acceleration = 0.0;
+	double pressure = 0.0;
+	double x_speed = 0.0;
+	double y_speed = 0.0;
 	float h;
 	float s;
 	float v;
@@ -70,7 +78,7 @@ private:
 	int Draw();
 	sand_t sand[MAX_SAND];
 	sand_t preset[MAX_PRESET];
-
+	ToggleKey *change_heat_map_key;
 };
 
 

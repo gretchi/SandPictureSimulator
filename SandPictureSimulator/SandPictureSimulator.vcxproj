@@ -23,7 +23,7 @@
     <ProjectGuid>{F91D6DCE-0BFF-4FA7-BE2C-537B8417E054}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SandPictureSimulator</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
     <ProjectName>SandPictureSimulator</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

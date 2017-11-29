@@ -23,4 +23,17 @@ void ShowStatusWithDirectX(int color, char *message);
 // HSV取得
 int GetColorHSV(float H, float S, float V);
 
+// トグルキー
+class ToggleKey {
+public:
+	ToggleKey(int key_code);
+	~ToggleKey();
+	void Refresh();
+	int GetResult();
+private:
+	int mapped_key;
+	int last_state;
+	int result;
+};
+
 #endif __COMMON_LIB_H__

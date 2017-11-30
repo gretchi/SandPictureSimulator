@@ -8,7 +8,10 @@ double fluid_moov_n[WIDTH_GRID_NUM][HEIGHT_GRID_NUM];
 double fluid_moov_x[WIDTH_GRID_NUM][HEIGHT_GRID_NUM];
 double fluid_moov_y[WIDTH_GRID_NUM][HEIGHT_GRID_NUM];
 
-int murky_sc_handle;
+double fluid_murly_n[MAX_PRESET][WIDTH_GRID_NUM][HEIGHT_GRID_NUM];
+
+
+int murky_sc_handle[MAX_PRESET];
 
 GameMain::GameMain() {
 	// ================================================================
@@ -41,7 +44,9 @@ void GameMain::Load() {
 	// スクリーンハンドル作成
 	// ================================================================
 	// 濁りスクリーンハンドル
-	murky_sc_handle = MakeScreen(WIDTH_GRID_NUM, HEIGHT_GRID_NUM, 1);
+	for (int i = 0; i < MAX_PRESET; i++) {
+		murky_sc_handle[i] = MakeScreen(WIDTH_GRID_NUM, HEIGHT_GRID_NUM, 1);
+	}
 
 	// ================================================================
 	// ピクセルテーブル初期化
@@ -86,7 +91,7 @@ void GameMain::Load() {
 	// 砂初期化
 	// ================================================================
 	for (int i = 0; i < MAX_SAND; i++) {
-		int preset_id = GetRand(MAX_PRESET);
+		int preset_id = GetRand(MAX_PRESET-1);
 		int position_id = GetRand(position_num);
 		double offset = pow(SCREEN_WIDTH / MAX_SAND, i);
 
@@ -100,6 +105,7 @@ void GameMain::Load() {
 		this->sand[i].h = this->preset[preset_id].h;
 		this->sand[i].s = this->preset[preset_id].s;
 		this->sand[i].v = this->preset[preset_id].v;
+		this->sand[i].preset_id = preset_id;
 		this->sand[i].shineing_rate = this->preset[preset_id].shineing_rate;
 		this->sand[i].color = GetColorHSV(this->sand[i].h, this->sand[i].s, this->sand[i].v);
 		this->sand[i].is_fix = false;
@@ -180,6 +186,7 @@ int GameMain::Draw() {
 			// フィールド反映
 			if (this->sand[i].x > 0 && this->sand[i].x < SCREEN_WIDTH && this->sand[i].y > 0 && this->sand[i].y < SCREEN_HEIGHT) {
 				fluid_moov_n[int(this->sand[i].x / FLUID_GRID)][int(this->sand[i].y / FLUID_GRID)] += 1;
+				fluid_murly_n[this->sand[i].preset_id][int(this->sand[i].x / FLUID_GRID)][int(this->sand[i].y / FLUID_GRID)] += 1;
 			}
 		}
 
@@ -253,25 +260,39 @@ int GameMain::Draw() {
 	// ----------------------------------------------------------------
 	// 濁り表現
 	// ----------------------------------------------------------------
-	// 描画先を濁りスクリーンハンドルにセット
-	SetDrawScreen(murky_sc_handle);
-	FillMaskScreen(0);
-	for (int i = 0; i < WIDTH_GRID_NUM; i++) {
-		for (int j = 0; j < HEIGHT_GRID_NUM; j++) {
-			int hm_b_mode_alpha = fluid_moov_n[i][j] * 0.50f;
-			if (hm_b_mode_alpha >= 255) {
-				hm_b_mode_alpha = 255;
+	for (int i = 0; i < MAX_PRESET; i++) {
+		// プリセットカラー取得
+		float h = this->preset[i].h;
+		float s = this->preset[i].s;
+		float v = this->preset[i].v;
+		int col = GetColorHSV(h, s, v);
+
+		// 描画先を濁りスクリーンハンドルにセット
+		SetDrawScreen(murky_sc_handle[i]);
+		FillMaskScreen(0);
+		for (int j = 0; j < WIDTH_GRID_NUM; j++) {
+			for (int k = 0; k < HEIGHT_GRID_NUM; k++) {
+				int hm_b_mode_alpha = fluid_murly_n[i][j][k] * 0.50f;
+				if (hm_b_mode_alpha >= 32) {
+					hm_b_mode_alpha = 32;
+				}
+				SetDrawBlendMode(DX_BLENDMODE_ALPHA, hm_b_mode_alpha);
+				DrawPixel(j, k, col);
 			}
-			SetDrawBlendMode(DX_BLENDMODE_ALPHA, hm_b_mode_alpha);
-			DrawPixel(i, j, GetColorHSV(this->init_hue, 0.3f, 0.8f));
 		}
 	}
 	// 描画先に裏画面を再セット
 	SetDrawScreen(DX_SCREEN_BACK);
 	FillMaskScreen(0);
-	SetDrawBlendMode(DX_BLENDMODE_ADD, 200);
-	DrawExtendGraph(0, 0, SCREEN_WIDTH + FLUID_GRID, SCREEN_HEIGHT + FLUID_GRID, murky_sc_handle, true);
+	SetDrawBlendMode(DX_BLENDMODE_ADD, 64);
+	for (int i = 0; i < MAX_PRESET; i++) {
+		DrawExtendGraph(0, 0, SCREEN_WIDTH + FLUID_GRID, SCREEN_HEIGHT + FLUID_GRID, murky_sc_handle[i], true);
+	}
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+	for (int i = 0; i < MAX_PRESET; i++) {
+		DrawGraph(0, 0+(HEIGHT_GRID_NUM*i), murky_sc_handle[i], true);
+	}
 
 	// ----------------------------------------------------------------
 	// 砂描画

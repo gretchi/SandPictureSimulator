@@ -65,6 +65,7 @@ typedef struct sand {
 	float h;
 	float s;
 	float v;
+	int preset_id;
 	int shineing_rate = 100;
 	int color = 0xFFFFFF;
 	bool is_fix = false;

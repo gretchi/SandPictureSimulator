@@ -27,6 +27,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//アクティブでなくても動くか
 	SetAlwaysRunFlag(TRUE);
 
+	// VSyncをまつ
+	SetWaitVSyncFlag(TRUE);
+
 	//ＤＸライブラリ初期化処理
 	if (DxLib_Init() == -1) {
 		return -1;
@@ -36,8 +39,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	//描画をバイリニアで
 	SetDrawMode(DX_DRAWMODE_BILINEAR);
 	//	SetDrawMode(DX_DRAWMODE_NEAREST);
-	// VSyncをまつ
-	SetWaitVSyncFlag(TRUE);
 
 	
 	GameMain *gm_p = new GameMain();

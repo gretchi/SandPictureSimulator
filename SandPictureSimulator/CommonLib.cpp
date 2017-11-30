@@ -45,6 +45,10 @@ double GetFPS() {
 
 	average_buf[flame_count] = fps;
 
+	if (flame_count >= 128) {
+		flame_count = 128;
+	}
+
 	if (GetNowCount() - start_time > 500) {
 		double max = 0.0;
 		for (int i = 0; i < flame_count; i++) {

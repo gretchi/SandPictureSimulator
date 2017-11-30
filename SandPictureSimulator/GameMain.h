@@ -47,6 +47,9 @@
 #define WIDTH_GRID_NUM SCREEN_WIDTH / FLUID_GRID + 1
 #define HEIGHT_GRID_NUM SCREEN_HEIGHT / FLUID_GRID + 1
 
+#define MAX_POSITION 6
+
+
 #define ADD_ACTIVE_SAND 500
 
 typedef struct sand {
@@ -77,10 +80,12 @@ public:
 private:
 	void Load();
 	int Draw();
+	double init_hue;
 	sand_t sand[MAX_SAND];
 	sand_t preset[MAX_PRESET];
 	ToggleKey *change_heat_map_key;
 	ToggleKey *reset_key;
+	ToggleKey *max_frame_rate_key;
 };
 
 

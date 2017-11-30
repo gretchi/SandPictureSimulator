@@ -12,6 +12,7 @@ double fluid_murly_n[MAX_PRESET][WIDTH_GRID_NUM][HEIGHT_GRID_NUM];
 
 
 int murky_sc_handle[MAX_PRESET];
+int heat_sc_handle;
 
 GameMain::GameMain() {
 	// ================================================================
@@ -47,6 +48,7 @@ void GameMain::Load() {
 	for (int i = 0; i < MAX_PRESET; i++) {
 		murky_sc_handle[i] = MakeScreen(WIDTH_GRID_NUM, HEIGHT_GRID_NUM, 1);
 	}
+	heat_sc_handle = MakeScreen(WIDTH_GRID_NUM, HEIGHT_GRID_NUM, 1);
 
 	// ================================================================
 	// ピクセルテーブル初期化
@@ -114,7 +116,7 @@ void GameMain::Load() {
 		this->sand[i].x = positions[position_id] + 25 + (offset * SCREEN_WIDTH / MAX_SAND) + ((this->sand[i].y / 3) * GetRand(2) - 1);
 
 	}
-	
+
 }
 
 
@@ -127,9 +129,19 @@ int GameMain::Draw() {
 	// ================================================================
 	// フィールド状態処理
 	// ================================================================
+	// ブロック初期化
 	for (int i = 0; i < WIDTH_GRID_NUM; i++) {
 		for (int j = 0; j < HEIGHT_GRID_NUM; j++) {
 			fluid_moov_n[i][j] = 0;
+		}
+	}
+
+	// 濁り初期化
+	for (int i = 0; i < MAX_PRESET; i++) {
+		for (int j = 0; j < WIDTH_GRID_NUM; j++) {
+			for (int k = 0; k < HEIGHT_GRID_NUM; k++) {
+				fluid_murly_n[i][j][k] = 0;
+			}
 		}
 	}
 
@@ -258,6 +270,11 @@ int GameMain::Draw() {
 	// 描画
 	// ================================================================
 	// ----------------------------------------------------------------
+	// 画面初期化
+	// ----------------------------------------------------------------
+	FillMaskScreen(0);
+
+	// ----------------------------------------------------------------
 	// 濁り表現
 	// ----------------------------------------------------------------
 	for (int i = 0; i < MAX_PRESET; i++) {
@@ -273,8 +290,8 @@ int GameMain::Draw() {
 		for (int j = 0; j < WIDTH_GRID_NUM; j++) {
 			for (int k = 0; k < HEIGHT_GRID_NUM; k++) {
 				int hm_b_mode_alpha = fluid_murly_n[i][j][k] * 0.50f;
-				if (hm_b_mode_alpha >= 32) {
-					hm_b_mode_alpha = 32;
+				if (hm_b_mode_alpha >= 100) {
+					hm_b_mode_alpha = 100;
 				}
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, hm_b_mode_alpha);
 				DrawPixel(j, k, col);
@@ -286,13 +303,10 @@ int GameMain::Draw() {
 	FillMaskScreen(0);
 	SetDrawBlendMode(DX_BLENDMODE_ADD, 64);
 	for (int i = 0; i < MAX_PRESET; i++) {
-		DrawExtendGraph(0, 0, SCREEN_WIDTH + FLUID_GRID, SCREEN_HEIGHT + FLUID_GRID, murky_sc_handle[i], true);
+		DrawExtendGraph(0, 0, SCREEN_WIDTH + FLUID_GRID, SCREEN_HEIGHT + FLUID_GRID, murky_sc_handle[i], TRUE);
 	}
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
-	for (int i = 0; i < MAX_PRESET; i++) {
-		DrawGraph(0, 0+(HEIGHT_GRID_NUM*i), murky_sc_handle[i], true);
-	}
 
 	// ----------------------------------------------------------------
 	// 砂描画
@@ -305,6 +319,8 @@ int GameMain::Draw() {
 	// ----------------------------------------------------------------
 	// ヒートマップ描画
 	// ----------------------------------------------------------------
+	// SetDrawScreen(heat_sc_handle);
+
 	if(this->change_heat_map_key->GetToggle()) {
 		for (int i = 0; i < WIDTH_GRID_NUM; i++) {
 			for (int j = 0; j < HEIGHT_GRID_NUM; j++) {
@@ -313,10 +329,27 @@ int GameMain::Draw() {
 					hm_b_mode_alpha = 255;
 				}
 				SetDrawBlendMode(DX_BLENDMODE_ALPHA, hm_b_mode_alpha - 16);
-				DrawBox(i * FLUID_GRID, j * FLUID_GRID, i * FLUID_GRID + FLUID_GRID, j * FLUID_GRID + FLUID_GRID, GetColorHSV(abs(225.0f - fluid_moov_n[i][j] * 0.50f), 1.0f, 1.0f), true);
+
+				double h = 225.0f - fluid_moov_n[i][j] * 0.50f;
+				float s = 1.0f;
+				if (h < 0.0) {
+					s += h * 0.0008f;
+					h = 0.0;
+					if (s < 0) {
+						s = 0;
+					}
+				}
+				// DrawPixel(i, j, GetColorHSV(h, s, 1.0f));
+				DrawBox(i * FLUID_GRID, j * FLUID_GRID, i * FLUID_GRID + FLUID_GRID, j * FLUID_GRID + FLUID_GRID, GetColorHSV(h, s, 1.0f), true);
 			}
 		}
+
+		// SetDrawScreen(DX_SCREEN_BACK);
+		// SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+		// DrawExtendGraph(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, heat_sc_handle, TRUE);
 	}
+
+
 // #endif // _DEBUG
 
 	// ================================================================

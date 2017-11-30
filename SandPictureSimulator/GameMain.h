@@ -28,8 +28,13 @@
 // ‰ð‘œ“x’è‹`
 #define SCREEN_WIDTH	1024
 #define SCREEN_HEIGHT	576
+
+#define SCREEN_WIDTH	1920
+#define SCREEN_HEIGHT	1080
+
 #endif __DOT_BY_DOT__
 
+#define IS_WINDOW_MODE FALSE
 
 #define WINDOW_TITLE "SandPictureSimulator"
 

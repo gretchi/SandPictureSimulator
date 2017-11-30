@@ -19,7 +19,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance,
 	// 画面モードのセット
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32);
 	//ウィンドウモードで起動
-	ChangeWindowMode(TRUE);
+	ChangeWindowMode(IS_WINDOW_MODE);
 	//カーソル
 	SetMouseDispFlag(TRUE);
 	//タイトル

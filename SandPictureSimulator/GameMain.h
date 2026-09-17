@@ -2,7 +2,7 @@
 
 #ifndef __GAME_MAIN_H__
 #define __GAME_MAIN_H__
-// #define __DOT_BY_DOT__
+ //#define __DOT_BY_DOT__
 
 
 #include <stdio.h>
@@ -29,25 +29,29 @@
 #define SCREEN_WIDTH	1024
 #define SCREEN_HEIGHT	576
 
-#define SCREEN_WIDTH	1920
+#define SCREEN_WIDTH	1080
 #define SCREEN_HEIGHT	1080
+
+//#define SCREEN_WIDTH	1920
+//#define SCREEN_HEIGHT	1080
 
 #endif __DOT_BY_DOT__
 
 #define IS_WINDOW_MODE FALSE
+#define IS_WINDOW_MODE TRUE
 
 #define WINDOW_TITLE "SandPictureSimulator"
 
 #define MAX_STRING 255
 
-#define MAX_SAND 200000
+#define MAX_SAND 800000
 #define MAX_PRESET 6
 
 #define FIX_BORDER 1
 
 #define GRAVITY 0.25
 
-#define FLUID_GRID 12
+#define FLUID_GRID 8
 
 #define WIDTH_GRID_NUM SCREEN_WIDTH / FLUID_GRID + 1
 #define HEIGHT_GRID_NUM SCREEN_HEIGHT / FLUID_GRID + 1

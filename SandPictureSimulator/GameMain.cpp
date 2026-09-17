@@ -121,6 +121,8 @@ void GameMain::Load() {
 
 
 int GameMain::Draw() {
+	int frame_count = 0;
+
 	// ================================================================
 	// 内部変数初期化
 	// ================================================================
@@ -358,7 +360,14 @@ int GameMain::Draw() {
 	active += ADD_ACTIVE_SAND;
 	if (MAX_SAND >= active) {
 		active = MAX_SAND;
-	}
+		}
+
+
+	//if (frame_count / 60 < 5) {
+	//	DrawString(10, SCREEN_HEIGHT - 130, "操作\n\tR: リセット\n\tH: ヒートマップ表示/非表示\n\tX: フレームレートリミットの解除", GetColorHSV(0.0f, 0.0f, 1.0f));
+	//}
+
+	frame_count++;
 
 	return 0;
 }
@@ -398,7 +407,7 @@ int GameMain::Main() {
 			}
 
 
-			sprintf_s(title_buf, MAX_STRING, "%s [%.02fFPS] %s %s", WINDOW_TITLE, GetFPS(), frame_state, build_state);
+			// sprintf_s(title_buf, MAX_STRING, "%s [%.02fFPS] %s %s", WINDOW_TITLE, GetFPS(), frame_state, build_state);
 			SetMainWindowText(title_buf);
 
 			// キーマップリフレッシュ
